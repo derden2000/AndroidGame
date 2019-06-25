@@ -2,6 +2,7 @@ package ru.geekbrains.android.base;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.android.math.Rect;
 
@@ -37,6 +38,24 @@ public class Sprite extends Rect {
     public void resize(Rect worldBounds) {
 
     }
+
+    public boolean touchUp(Vector2 touch, int pointer) {
+        return false;
+    }
+
+    public boolean touchDown(Vector2 touch, int pointer) {
+        return false;
+    }
+
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    public void update(Float delta) {}
 
     public float getAngle() {
         return angle;

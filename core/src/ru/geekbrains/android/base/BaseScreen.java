@@ -21,7 +21,6 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     private Matrix3 screenToWorld;
 
     private Vector2 touch;
-    private Vector2 spedd;
 
     @Override
     public void show() {
@@ -34,7 +33,6 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         worldToGl = new Matrix4();
         screenToWorld = new Matrix3();
         touch = new Vector2();
-        spedd = new Vector2();
     }
 
     @Override
@@ -119,10 +117,6 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     public boolean touchUp(Vector2 touch, int pointer) {
         System.out.println("touchUp touchX = " + touch.x + " touchY = " + touch.y);
         return false;
-    }
-
-    public Vector2 setSpeed(Vector2 pos) {
-        return new Vector2(this.touch.cpy().sub(pos).scl(0.01f));
     }
 
     public Vector2 setTouch() {
