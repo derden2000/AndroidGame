@@ -1,0 +1,26 @@
+
+game_btn.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+btnExit
+  rotate: false
+  xy: 1, 173
+  size: 742, 170
+  orig: 742, 170
+  offset: 0, 0
+  index: -1
+btnPlay
+  rotate: false
+  xy: 1, 1
+  size: 742, 170
+  orig: 742, 170
+  offset: 0, 0
+  index: -1
+star
+  rotate: false
+  xy: 745, 243
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
