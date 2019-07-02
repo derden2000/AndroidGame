@@ -5,36 +5,78 @@ filter: Nearest,Nearest
 repeat: none
 btnExit
   rotate: false
-  xy: 1, 231
+  xy: 1, 846
   size: 742, 170
   orig: 742, 170
   offset: 0, 0
   index: -1
 btnPlay
   rotate: false
-  xy: 1, 59
+  xy: 1, 674
   size: 742, 170
   orig: 742, 170
   offset: 0, 0
   index: -1
-star
+Level
   rotate: false
-  xy: 745, 301
-  size: 100, 100
-  orig: 100, 100
+  xy: 1, 23
+  size: 234, 649
+  orig: 234, 649
+  offset: 0, 0
+  index: -1
+btnFinish
+  rotate: false
+  xy: 237, 560
+  size: 500, 112
+  orig: 500, 112
+  offset: 0, 0
+  index: -1
+btnStart
+  rotate: false
+  xy: 237, 446
+  size: 500, 112
+  orig: 500, 112
   offset: 0, 0
   index: -1
 ship
   rotate: false
-  xy: 1, 1
-  size: 52, 56
-  orig: 52, 56
+  xy: 745, 960
+  size: 106, 56
+  orig: 106, 56
   offset: 0, 0
   index: -1
-ship2
+cosmoship
   rotate: false
-  xy: 745, 243
-  size: 52, 56
-  orig: 52, 56
+  xy: 237, 384
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
+enemyship
+  rotate: false
+  xy: 745, 898
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
+enemyBullet
+  rotate: false
+  xy: 1, 1
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+ownBullet
+  rotate: false
+  xy: 853, 996
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+star
+  rotate: false
+  xy: 237, 372
+  size: 10, 10
+  orig: 10, 10
   offset: 0, 0
   index: -1
