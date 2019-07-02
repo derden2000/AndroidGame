@@ -9,8 +9,9 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.android.base.Sprite;
 import ru.geekbrains.android.math.Rect;
 import ru.geekbrains.android.pool.BulletPool;
+import ru.geekbrains.android.pool.EnemyShipPool;
 
-public class SpaceShip extends Sprite {
+public class SpaceShip extends ShipTemplate/*Sprite*/ {
 
     private static final int INVALID_POINTER = -1;
 
@@ -46,6 +47,10 @@ public class SpaceShip extends Sprite {
 
     public CharSequence getPoints() {
         return Integer.toString(points);
+    }
+
+    public void addPoints(int points) {
+        this.points += points;
     }
 
     @Override
@@ -157,7 +162,6 @@ public class SpaceShip extends Sprite {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, atlas.findRegion("ownBullet"), pos, new Vector2(0, 0.5f), 0.01f, worldBounds, 1);
         laser.play();
-        points++;
     }
 
     private void moveRight() {
@@ -175,8 +179,36 @@ public class SpaceShip extends Sprite {
     public void checkShoot(Bullet bullet) {
         if (!bullet.getOwner().equals(this)) {
             explosion.play(0.2f);
+            Gdx.input.vibrate(200);
             bullet.destroy();
             lifeLevelPic.strength --;
+        }
+    }
+
+    public void dispose() {
+        shoot.dispose();
+        explosion.dispose();
+        laser.dispose();
+    }
+
+    public void checkCross(BulletPool bulletPool, EnemyShipPool enemyShipPool) {
+        for (Bullet bullet : bulletPool.getActiveObjects()) {
+            if (!bullet.isOutside(this)) {
+                if (!bullet.getOwner().getClass().equals(this.getClass())) {
+                    explosion.play(0.2f);
+                    Gdx.input.vibrate(200);
+                    bullet.destroy();
+                    lifeLevelPic.strength--;
+                }
+            }
+        }
+        for (EnemyShip enemyShip : enemyShipPool.getActiveObjects()) {
+            if (!enemyShip.isOutside(this)) {
+                explosion.play(0.2f);
+                Gdx.input.vibrate(200);
+                enemyShip.destroy();
+                lifeLevelPic.strength -=3;
+            }
         }
     }
 }

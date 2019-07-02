@@ -37,4 +37,9 @@ public class Star extends Sprite {
         if (getTop() < worldBounds.getBottom()) {setBottom(worldBounds.getTop());}
         if (getBottom() > worldBounds.getTop()) {setTop(worldBounds.getBottom());}
     }
+
+//    @Override
+//    public void dispose() {
+//
+//    }
 }

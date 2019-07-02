@@ -1,6 +1,7 @@
 package ru.geekbrains.android.sprite;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import ru.geekbrains.android.base.ScaledTouchUpButton;
@@ -27,4 +28,20 @@ public class ButtonPlay extends ScaledTouchUpButton {
         setRight(worldBounds.getRight() - 0.005f);
         setBottom(worldBounds.getBottom() + 0.005f);
     }
+
+    public void render(float delta, SpriteBatch batch) {
+        batch.draw(
+                regions[frame],
+                getLeft(), getBottom(),
+                halfWidth, halfHeight,
+                getWidth(), getHeight(),
+                scale, scale,
+                angle
+        );
+    }
+
+//    @Override
+//    public void dispose() {
+//
+//    }
 }
