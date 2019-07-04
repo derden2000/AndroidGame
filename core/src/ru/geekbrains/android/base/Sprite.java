@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.android.math.Rect;
 import ru.geekbrains.android.utils.Regions;
 
-public class Sprite extends Rect {
+public abstract class Sprite extends Rect {
 
     protected float angle;
     protected float scale = 1f;
@@ -37,6 +37,10 @@ public class Sprite extends Rect {
                 angle
         );
     }
+
+//    public void render(float delta) {
+//
+//    }
 
     public void setHeightProportion(float height) {
         setHeight(height);

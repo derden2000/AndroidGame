@@ -2,7 +2,9 @@ package ru.geekbrains.android.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -21,6 +23,7 @@ import ru.geekbrains.android.sprite.EnemyShip;
 import ru.geekbrains.android.sprite.LifeLevelPic;
 import ru.geekbrains.android.sprite.SpaceShip;
 import ru.geekbrains.android.sprite.Star;
+import ru.geekbrains.android.utils.EnemyGenerator;
 
 public class GameScreen extends BaseScreen {
 
@@ -36,7 +39,10 @@ public class GameScreen extends BaseScreen {
     private EnemyShipPool enemyShipPool;
     private LifeLevelPic lifeLevelPic;
     private Music music;
+    private Sound shoot;
     private BitmapFont points = new BitmapFont();
+
+    private EnemyGenerator enemyGenerator;
 
 
     public GameScreen(Game game) {
@@ -50,8 +56,9 @@ public class GameScreen extends BaseScreen {
         background = new Background(new TextureRegion(bground));
         atlas = new TextureAtlas("textures/game_btn.pack");
         bulletPool = new BulletPool();
-        enemyShipPool = new EnemyShipPool();
-        lifeLevelPic = new LifeLevelPic(atlas,game);
+        shoot = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
+        enemyShipPool = new EnemyShipPool(bulletPool, getWorldBounds(), shoot);
+        lifeLevelPic = new LifeLevelPic(atlas, game, 80);
         ship = new SpaceShip(atlas, bulletPool, lifeLevelPic);
         for (int i = 0; i < 10; i++) {
             stars.add(new Star(atlas));
@@ -60,12 +67,15 @@ public class GameScreen extends BaseScreen {
         music.play();
         music.setPosition(Rnd.nextFloat(20,800));
         music.setLooping(true);
+        enemyGenerator = new EnemyGenerator(atlas, enemyShipPool, getWorldBounds(), bulletPool, ship);
         createEnemyShip();
+        Gdx.input.setCatchBackKey(true);
     }
 
     private void createEnemyShip() {
-        EnemyShip enemyShip = enemyShipPool.obtain();
-        enemyShip.set(atlas, getWorldBounds(), bulletPool);
+        enemyGenerator.generate(0.2f);
+//        EnemyShip enemyShip = enemyShipPool.obtain();
+//        enemyShip.set(atlas, getWorldBounds(), bulletPool, ship);
     }
 
     @Override
@@ -110,8 +120,8 @@ public class GameScreen extends BaseScreen {
         super.render(delta);
         update(delta);
         draw();
-        checkBulletHit(ship);
-        checkBulletHit(enemyShipPool);
+        ship.checkCross(bulletPool, enemyShipPool); //можно 2 метода вынести в родительский класс.
+        enemyShipPool.checkCross(bulletPool);      // не успеваю вынести
         freeAllDestroyedSprites();
     }
 
@@ -123,23 +133,6 @@ public class GameScreen extends BaseScreen {
         }
     }
 
-    private void checkBulletHit(EnemyShipPool enemyPool) {
-        for (Bullet bullet : bulletPool.getActiveObjects()) {
-            for (EnemyShip enemyShip : enemyPool.getActiveObjects()) {
-                if (!bullet.isOutside(enemyShip)) {
-                    enemyShip.checkShoot(bullet);
-                }
-            }
-        }
-    }
-    private void checkBulletHit(SpaceShip spaceShip) {
-        for (Bullet bullet : bulletPool.getActiveObjects()) {
-            if (!bullet.isOutside(spaceShip)) {
-                spaceShip.checkShoot(bullet);
-            }
-        }
-    }
-
     @Override
     public void dispose() {
         super.dispose();
@@ -148,10 +141,14 @@ public class GameScreen extends BaseScreen {
         bulletPool.dispose();
         enemyShipPool.dispose();
         music.dispose();
+        ship.dispose();
     }
 
     @Override
     public boolean keyDown(int keycode) {
+        if(keycode == Input.Keys.BACK){
+            game.setScreen(new MenuScreen(this.game));
+        }
         ship.keyDown(keycode);
         return false;
     }

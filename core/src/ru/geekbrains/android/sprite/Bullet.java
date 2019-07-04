@@ -10,7 +10,7 @@ import ru.geekbrains.android.math.Rect;
 public class Bullet extends Sprite {
 
     private Rect worldBounds;
-    private Vector2 v = new Vector2();
+    private Vector2 bulletSpeed = new Vector2();
     private int damage;
     private Object owner;
 
@@ -30,7 +30,7 @@ public class Bullet extends Sprite {
         this.owner = owner;
         this.regions[0] = region;
         this.pos.set(pos0);
-        this.v.set(v0);
+        this.bulletSpeed.set(v0);
         setHeightProportion(height);
         this.worldBounds = worldBounds;
         this.damage = damage;
@@ -38,11 +38,16 @@ public class Bullet extends Sprite {
 
     @Override
     public void update(Float delta) {
-        pos.mulAdd(v, delta);
+        pos.mulAdd(bulletSpeed, delta);
         if (isOutside(worldBounds)) {
             destroy();
         }
     }
+
+//    @Override
+//    public void dispose() {
+//
+//    }
 
     public int getDamage() {
         return damage;

@@ -23,4 +23,9 @@ public class ButtonExit extends ScaledTouchUpButton {
         setLeft(worldBounds.getLeft() + 0.005f);
         setBottom(-0.35f);
     }
+
+//    @Override
+//    public void dispose() {
+//
+//    }
 }

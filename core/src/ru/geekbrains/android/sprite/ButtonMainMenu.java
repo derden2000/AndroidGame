@@ -26,4 +26,9 @@ public class ButtonMainMenu extends ScaledTouchUpButton {
         setHeightProportion(0.1f);
         pos.set(0, -0.25f);
     }
+
+//    @Override
+//    public void dispose() {
+//
+//    }
 }
