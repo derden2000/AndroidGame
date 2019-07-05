@@ -17,6 +17,7 @@ import ru.geekbrains.android.math.Rect;
 import ru.geekbrains.android.math.Rnd;
 import ru.geekbrains.android.pool.BulletPool;
 import ru.geekbrains.android.pool.EnemyShipPool;
+import ru.geekbrains.android.pool.ExplosionPool;
 import ru.geekbrains.android.sprite.Background;
 import ru.geekbrains.android.sprite.Bullet;
 import ru.geekbrains.android.sprite.EnemyShip;
@@ -37,9 +38,10 @@ public class GameScreen extends BaseScreen {
 
     private BulletPool bulletPool;
     private EnemyShipPool enemyShipPool;
+    private ExplosionPool explosionPool;
     private LifeLevelPic lifeLevelPic;
     private Music music;
-    private Sound shoot;
+    private Sound shoot, explosion;
     private BitmapFont points = new BitmapFont();
 
     private EnemyGenerator enemyGenerator;
@@ -57,9 +59,11 @@ public class GameScreen extends BaseScreen {
         atlas = new TextureAtlas("textures/game_btn.pack");
         bulletPool = new BulletPool();
         shoot = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
-        enemyShipPool = new EnemyShipPool(bulletPool, getWorldBounds(), shoot);
+        explosion = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
+        explosionPool = new ExplosionPool(atlas, explosion);
+        enemyShipPool = new EnemyShipPool(bulletPool, explosionPool, getWorldBounds(), shoot);
         lifeLevelPic = new LifeLevelPic(atlas, game, 80);
-        ship = new SpaceShip(atlas, bulletPool, lifeLevelPic);
+        ship = new SpaceShip(atlas, bulletPool, explosionPool, lifeLevelPic, shoot);
         for (int i = 0; i < 10; i++) {
             stars.add(new Star(atlas));
         }
@@ -97,6 +101,7 @@ public class GameScreen extends BaseScreen {
         lifeLevelPic.update(delta);
         bulletPool.updateActiveSprites(delta);
         enemyShipPool.updateActiveSprites(delta);
+        explosionPool.updateActiveSprites(delta);
     }
 
     public void draw() {
@@ -109,6 +114,7 @@ public class GameScreen extends BaseScreen {
         }
         bulletPool.drawActiveSprites(batch);
         enemyShipPool.drawActiveSprites(batch);
+        explosionPool.drawActiveSprites(batch);
         if (enemyShipPool.getActiveObjects().size() < 3) {
             createEnemyShip();
         }
@@ -141,7 +147,7 @@ public class GameScreen extends BaseScreen {
         bulletPool.dispose();
         enemyShipPool.dispose();
         music.dispose();
-        ship.dispose();
+//        ship.dispose();
     }
 
     @Override

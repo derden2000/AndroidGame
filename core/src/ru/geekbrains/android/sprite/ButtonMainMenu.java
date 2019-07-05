@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import ru.geekbrains.android.base.ScaledTouchUpButton;
 import ru.geekbrains.android.math.Rect;
+import ru.geekbrains.android.screen.MainScreen;
 import ru.geekbrains.android.screen.MenuScreen;
 
 public class ButtonMainMenu extends ScaledTouchUpButton {
@@ -18,7 +19,7 @@ public class ButtonMainMenu extends ScaledTouchUpButton {
 
     @Override
     protected void action() {
-        game.setScreen(new MenuScreen(this.game));
+        game.setScreen(new MainScreen(this.game));
     }
 
     @Override
