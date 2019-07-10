@@ -15,17 +15,22 @@ public abstract class ShipTemplate extends Sprite {
     protected TextureRegion bulletRegion;
     protected Vector2 speed;
     protected Vector2 moveSpeed;
-//    protected Vector2 v0;
     protected int hp;
+    protected int pointsForKill;
     protected float bulletHeight;
     protected Sound shootSound;
     protected Sound blowSound;
     protected Vector2 bulletSpeed;
-    protected int bulletDamage;
+//    protected int bulletDamage;
     protected Rect worldBounds;
     protected BulletPool bulletPool;
     protected ExplosionPool explosionPool;
     protected int damage;
+    private float damageAnimateInterval = 0.2f;
+    private float damageAnimateTimer = damageAnimateInterval;
+    protected float timeCount;
+    protected float reloadInterval = 1.5f;
+
 
 
     public ShipTemplate(TextureRegion region, int rows, int cols, int frames) {
@@ -36,27 +41,12 @@ public abstract class ShipTemplate extends Sprite {
 
     }
 
-    public ShipTemplate(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound laser) {
-        this.bulletPool = bulletPool;
-        this.worldBounds = worldBounds;
-        this.explosionPool = explosionPool;
-        this.blowSound = explosionPool.getSound();
-        this.shootSound = laser;
-//        this.blowSound = explosion;
-        regions = new TextureRegion[2];
-        this.speed = new Vector2();
-        this.moveSpeed = new Vector2(); // V0??
-        this.bulletSpeed = new Vector2();
-        this.damage = 1; //??? должно сетиться в наследнике - проверить...
-    }
-
-    public int getHp() {
-        System.out.println(hp);
+        public int getHp() {
         return hp;
     }
 
-    public void decreaseHp(int hpPoints) {
-        this.hp -= hpPoints;
+    public int getPointsForKill() {
+        return pointsForKill;
     }
 
     @Override
@@ -67,18 +57,36 @@ public abstract class ShipTemplate extends Sprite {
     @Override
     public void update(Float delta) {
         super.update(delta);
-//        pos.mulAdd(speed, delta);
+        damageAnimateTimer += delta;
+        if (damageAnimateTimer >= damageAnimateInterval) {
+            frame = 0;
+        }
     }
 
-    protected void shootBullet() {
+    @Override
+    public void destroy() {
+        super.destroy();
+        blow();
+    }
+
+    public void shootBullet() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos, bulletSpeed, bulletHeight, worldBounds, damage);
-        shootSound.play();
+        shootSound.play(0.2f);
     }
 
-    protected void blow() {                             //++
-        Explosion explosion = explosionPool.obtain();   //++
-        explosion.set(getHeight(), pos);                //++
-        blowSound.play(0.01f); // ++ изменение громкости не срабатывает
+    protected void blow() {
+        Explosion explosion = explosionPool.obtain();
+        explosion.set(getHeight(), pos);
+    }
+
+    public void damage(int damagePoints) {
+        damageAnimateTimer = 0f;
+        frame = 1;
+        hp -= damagePoints;
+        if (hp <= 0) {
+            hp = 0;
+            destroy();
+        }
     }
 }

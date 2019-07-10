@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
+
 import ru.geekbrains.android.animation.Tiger;
 import ru.geekbrains.android.animation.TigerNew;
 import ru.geekbrains.android.base.AnimatedSprite;
@@ -14,6 +16,7 @@ import ru.geekbrains.android.math.Rect;
 import ru.geekbrains.android.sprite.Background;
 import ru.geekbrains.android.sprite.ButtonExit;
 import ru.geekbrains.android.sprite.ButtonPlay;
+import ru.geekbrains.android.sprite.Star;
 
 public class MainScreen extends BaseScreen {
 
@@ -22,6 +25,8 @@ public class MainScreen extends BaseScreen {
     private TextureAtlas atlas;
     private ButtonExit btnExit;
     private ButtonPlay btnPlay;
+
+    private ArrayList<Star> stars = new ArrayList<Star>();
 
     private AnimatedSprite animation;
 
@@ -35,6 +40,9 @@ public class MainScreen extends BaseScreen {
         atlas = new TextureAtlas("textures/game_btn.pack");
         btnExit = new ButtonExit(atlas);
         btnPlay = new ButtonPlay(atlas, game);
+//        for (int i = 0; i < 25; i++) {
+//            stars.add(new Star(atlas));
+//        }
         animation = new Tiger(new TextureRegion(new Texture("anim2.png")), 25, 5, 125,
                 new Vector2(0,0), 0.04f);
 
@@ -45,10 +53,16 @@ public class MainScreen extends BaseScreen {
     public void resize(Rect worldBounds) {
         btnPlay.resize(worldBounds);
         btnExit.resize(worldBounds);
+//        for (Star star : stars) {
+//            star.resize(worldBounds);
+//        }
     }
 
     @Override
     public void render(float delta) {
+//        for (Star star : stars) {
+//            star.update(delta);
+//        }
         animation.render();
         draw();
     }
@@ -78,6 +92,9 @@ public class MainScreen extends BaseScreen {
         btnPlay.draw(batch);
         btnExit.draw(batch);
         btnPlay.draw(batch);
+//        for (Star star : stars) {
+//            star.draw(batch);
+//        }
         batch.end();
     }
 }

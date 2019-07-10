@@ -11,15 +11,18 @@ import ru.geekbrains.android.screen.GameScreen;
 public class ButtonPlay extends ScaledTouchUpButton {
 
     private Game game;
+    private GameScreen gameScreen;
 
     public ButtonPlay(TextureAtlas atlas, Game game) {
         super(atlas.findRegion("btnPlay"));
         this.game = game;
+        this.gameScreen = new GameScreen(game);
     }
 
     @Override
     protected void action() {
-        game.setScreen(new GameScreen(game));
+        game.setScreen(gameScreen);
+        gameScreen.resetGameSettings();
     }
 
     @Override

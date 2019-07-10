@@ -34,6 +34,7 @@ public class Bullet extends Sprite {
         setHeightProportion(height);
         this.worldBounds = worldBounds;
         this.damage = damage;
+        System.out.println("bulletDamage: " + damage);
     }
 
     @Override
