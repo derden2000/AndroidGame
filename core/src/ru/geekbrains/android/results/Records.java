@@ -9,11 +9,11 @@ import java.util.TreeMap;
 
 public class Records {
 
-    private TreeMap<Integer, String> results = new TreeMap<Integer, String>(Collections.reverseOrder());
+    private TreeMap<Integer, String> results;
 
     public void addNewUser(String name, Integer points) {
-        if (results.size() > 5) {
-            results.pollLastEntry();
+        if (results.size() > 4) {
+            results.pollFirstEntry();
             results.put(points, name);
         } else {
             results.put(points, name);

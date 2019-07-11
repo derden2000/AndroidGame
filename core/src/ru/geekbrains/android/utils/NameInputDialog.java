@@ -2,13 +2,15 @@ package ru.geekbrains.android.utils;
 
 import com.badlogic.gdx.Input;
 
+import java.io.IOException;
+
 import ru.geekbrains.android.screen.ChoiceScreen;
 
-public class NameInput implements Input.TextInputListener {
+public class NameInputDialog implements Input.TextInputListener {
 
     private ChoiceScreen owner;
 
-    public NameInput(ChoiceScreen owner) {
+    public NameInputDialog(ChoiceScreen owner) {
         this.owner = owner;
     }
 
@@ -19,6 +21,15 @@ public class NameInput implements Input.TextInputListener {
         System.out.println("После добавления нового рекорда: " + owner.getRecords().getAllResults());
         String txt = owner.gson.toJson(owner.getRecords());
         owner.getFileOfRecords().writeString(txt, false);
+//
+//        Следующий код работает только на моем домашнем ftp-сервере в локальной сети
+//        Расскомментировать при выкладке файла рекордов на сервер с белым IP-адресом.
+//
+//        try {
+//            NetworkFileSaver.sendData(owner.getFileNameOfRecords());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override

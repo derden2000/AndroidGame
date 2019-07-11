@@ -19,10 +19,11 @@ import ru.geekbrains.android.sprite.ButtonFinish;
 import ru.geekbrains.android.sprite.ButtonMainMenu;
 import ru.geekbrains.android.sprite.ButtonResults;
 import ru.geekbrains.android.utils.Font;
-import ru.geekbrains.android.utils.NameInput;
+import ru.geekbrains.android.utils.NameInputDialog;
 
 public class ChoiceScreen extends BaseScreen {
 
+    private static final String FILENAMEOFRECORDS = "data/records.dat";
     private final int points;
     private Texture bground;
     private Background background;
@@ -39,7 +40,7 @@ public class ChoiceScreen extends BaseScreen {
     private Records records;
 
     private FileHandle fileOfRecords;
-    private NameInput dialog;
+    private NameInputDialog dialog;
 
     private StringBuilder resultsString;
     private Font font;
@@ -53,6 +54,8 @@ public class ChoiceScreen extends BaseScreen {
     public Records getRecords() {
         return records;
     }
+
+    public String getFileNameOfRecords() { return FILENAMEOFRECORDS; }
 
     public int getPoints() {
         return points;
@@ -75,7 +78,14 @@ public class ChoiceScreen extends BaseScreen {
         buttonMainMenu = new ButtonMainMenu(atlas,game);
         buttonFinish = new ButtonFinish(atlas);
         buttonResults = new ButtonResults(atlas, this);
-        fileOfRecords = Gdx.files.local("data/records.dat");
+        fileOfRecords = Gdx.files.local(FILENAMEOFRECORDS/*"data/records.dat"*/);
+//        Следующий код работает только на моем домашнем ftp-сервере в локальной сети
+//        Расскомментировать при выкладке файла рекордов на сервер с белым IP-адресом.
+//        try {
+//            fileOfRecords.writeString(NetworkFileSaver.getData(FILENAMEOFRECORDS), false);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         builder = new GsonBuilder();
         gson = builder.create();
         String text = fileOfRecords.readString();
@@ -84,7 +94,7 @@ public class ChoiceScreen extends BaseScreen {
         System.out.println("рекорды(records)" + records.getAllResults());
         checkRecordsTable(points);
         if (checkRecordsTable(points)) {
-            dialog = new NameInput(this);
+            dialog = new NameInputDialog(this);
             Gdx.input.getTextInput(dialog, "Вы попали в список рекордов", null, "Напишите Ваше Имя");
         }
         font = new Font("font/sample2.fnt", "font/sample2.png");
