@@ -15,6 +15,7 @@ import ru.geekbrains.android.pool.ExplosionPool;
 public class SpaceShip extends ShipTemplate/*Sprite*/ {
 
     private static final int INVALID_POINTER = -1;
+    private static final int HP_LEVEL = 100;
 
     private boolean pressedLeft;
     private boolean pressedRight;
@@ -22,39 +23,64 @@ public class SpaceShip extends ShipTemplate/*Sprite*/ {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    private BulletPool bulletPool;
+//    private BulletPool bulletPool;
     private LifeLevelPic lifeLevelPic;
 
     private Vector2 speed;
     private Vector2 moveSpeed = new Vector2(0.5f, 0f);;
-    private Vector2 touch;
-    private Rect worldBounds;
-    private TextureAtlas atlas;
+//    private Vector2 touch;
+//    private Rect worldBounds;
+//    private TextureAtlas atlas;
 //    private Sound shoot, explosion, laser;
     private int points;
+    private int frags;
 
     public SpaceShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, LifeLevelPic lifeLevelPic, Sound shoot) {
         super(atlas.findRegion("ship"), 1, 2, 2);
         setHeightProportion(0.1f);
-        this.atlas = atlas;
+//        this.atlas = atlas;
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
         this.blowSound = explosionPool.getSound();
         this.shootSound = shoot;
         this.lifeLevelPic = lifeLevelPic;
+        this.bulletRegion = atlas.findRegion("ownBullet");
+        this.bulletSpeed = new Vector2(0, 0.5f);
+        this.bulletHeight = 0.01f;
+        this.hp = HP_LEVEL;
+        this.damage = 1;
         speed = new Vector2();
-        touch = new Vector2();
-//        shoot = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
-//        explosion = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
-//        laser = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
-    }
-
-    public CharSequence getPoints() {
-        return Integer.toString(points);
+//        touch = new Vector2();
     }
 
     public void addPoints(int points) {
         this.points += points;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void addFrags(int points) {
+        this.frags += points;
+    }
+
+    public int getFrags() {
+        return frags;
+    }
+
+    public void setFrags(int frags) {
+        this.frags = frags;
+    }
+
+    @Override
+    public void damage(int damagePoints) {
+        super.damage(damagePoints);
+        lifeLevelPic.strength -= damagePoints;
     }
 
     @Override
@@ -66,7 +92,7 @@ public class SpaceShip extends ShipTemplate/*Sprite*/ {
 
     @Override
     public void update(Float delta) {
-        //super.update(delta);
+        super.update(delta);
         pos.mulAdd(speed, delta);
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
@@ -79,7 +105,18 @@ public class SpaceShip extends ShipTemplate/*Sprite*/ {
     }
 
     @Override
+    public void destroy() {
+        super.destroy();
+        stop();
+        pressedLeft = false;
+        pressedRight = false;
+        leftPointer = INVALID_POINTER;
+        rightPointer = INVALID_POINTER;
+    }
+
+    @Override
     public boolean touchUp(Vector2 touch, int pointer) {
+        shootBullet();
         if (pointer == leftPointer) {
             leftPointer = INVALID_POINTER;
             if (rightPointer != INVALID_POINTER) {
@@ -130,7 +167,7 @@ public class SpaceShip extends ShipTemplate/*Sprite*/ {
                 moveRight();
                 break;
             case Input.Keys.UP:
-                shoot();
+                shootBullet();
                 break;
         }
         return false;
@@ -162,21 +199,15 @@ public class SpaceShip extends ShipTemplate/*Sprite*/ {
         return false;
     }
 
-    public void shoot() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, atlas.findRegion("ownBullet"), pos, new Vector2(0, 0.5f), 0.01f, worldBounds, 1);
-        shootSound.play();
-    }
-
     private void moveRight() {
         speed.set(moveSpeed);
     }
 
-    private void moveLeft() {
+   private void moveLeft() {
         speed.set(moveSpeed).rotate(180);
     }
 
-    private void stop() {
+    public void stop() {
         speed.setZero();
     }
 
@@ -195,26 +226,35 @@ public class SpaceShip extends ShipTemplate/*Sprite*/ {
 //        laser.dispose();
 //    }
 
-    public void checkCross(BulletPool bulletPool, EnemyShipPool enemyShipPool) {
-        for (Bullet bullet : bulletPool.getActiveObjects()) {
-            if (!bullet.isOutside(this)) {
-                if (!bullet.getOwner().getClass().equals(this.getClass())) {
-                    blowSound.play(0.2f);
-                    Gdx.input.vibrate(200);
-                    bullet.destroy();
-                    lifeLevelPic.strength -= bullet.getDamage();
-                }
-            }
-        }
-        for (EnemyShip enemyShip : enemyShipPool.getActiveObjects()) {
-            float blowDist = this.getHalfHeight() + enemyShip.getHalfHeight();
-            if (this.pos.dst(enemyShip.pos) < blowDist/*!enemyShip.isOutside(this)*/) {
-//                blowSound.play(0.2f);
-                enemyShip.blow();
-                Gdx.input.vibrate(200);
-                enemyShip.destroy();
-                lifeLevelPic.strength -=3;
-            }
-        }
+//    public void checkCross(BulletPool bulletPool, EnemyShipPool enemyShipPool) {
+//        for (Bullet bullet : bulletPool.getActiveObjects()) {
+//            if (!bullet.isOutside(this)) {
+//                if (!bullet.getOwner().getClass().equals(this.getClass())) {
+//                    blowSound.play(0.1f);
+//                    this.damage(bullet.getDamage());
+//                    Gdx.input.vibrate(200);
+//                    bullet.destroy();
+//                    lifeLevelPic.strength -= bullet.getDamage();
+//                }
+//            }
+//        }
+//        for (EnemyShip enemyShip : enemyShipPool.getActiveObjects()) {
+//            float blowDist = this.getHalfHeight() + enemyShip.getHalfHeight();
+//            if (this.pos.dst(enemyShip.pos) < blowDist/*!enemyShip.isOutside(this)*/) {
+////                blowSound.play(0.2f);
+////                enemyShip.blow();
+//                Gdx.input.vibrate(200);
+//                enemyShip.destroy();
+//                lifeLevelPic.strength -=enemyShip.getHp();
+//            }
+//        }
+//    }
+
+    public void setToNewGame(Rect worldBounds) {
+        flushDestroy();
+        hp=HP_LEVEL;
+        points = 0;
+        frags = 0;
+        this.pos.x = worldBounds.pos.x;
     }
 }

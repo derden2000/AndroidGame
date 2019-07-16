@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
+
 import ru.geekbrains.android.animation.Tiger;
 import ru.geekbrains.android.animation.TigerNew;
 import ru.geekbrains.android.base.AnimatedSprite;
@@ -16,6 +18,7 @@ import ru.geekbrains.android.math.Rect;
 import ru.geekbrains.android.sprite.Background;
 import ru.geekbrains.android.sprite.ButtonExit;
 import ru.geekbrains.android.sprite.ButtonPlay;
+import ru.geekbrains.android.sprite.Star;
 
 public class MenuScreen extends BaseScreen {
     private Texture bground;
@@ -29,6 +32,7 @@ public class MenuScreen extends BaseScreen {
     private ButtonPlay btnPlay;
 
     private AnimatedSprite animation;
+    private ArrayList<Star> stars = new ArrayList<Star>();
     private TigerNew video;
 
     public MenuScreen(Game game) {
@@ -46,6 +50,9 @@ public class MenuScreen extends BaseScreen {
         btnPlay = new ButtonPlay(atlas, game);
         animation = new Tiger(new TextureRegion(new Texture("tiger.png")), 3, 3, 9,
                 new Vector2(150,250), 0.5f);
+        for (int i = 0; i < 64; i++) {
+            stars.add(new Star(atlas));
+        }
 //        animation = new Tiger(atlast, "tiger", 3,3,9, new Vector2(0,0), batch);
 //        video = new TigerNew(3,3,9, "tiger.png", new Vector2(0,0), batch);
 //        video.create();
@@ -58,13 +65,19 @@ public class MenuScreen extends BaseScreen {
         background.resize(worldBounds);
         btnPlay.resize(worldBounds);
         btnExit.resize(worldBounds);
+        for (Star star : stars) {
+            star.resize(worldBounds);
+        }
     }
 
     @Override
     public void render(float delta) {
 //        super.render(delta);
+        for (Star star : stars) {
+            star.update(delta);
+        }
         draw();
-        animation.render();
+//        animation.render();
     }
 
     @Override
@@ -94,6 +107,9 @@ public class MenuScreen extends BaseScreen {
         background.draw(batch);
         btnExit.draw(batch);
         btnPlay.draw(batch);
+        for (Star star : stars) {
+            star.draw(batch);
+        }
         batch.end();
     }
 }

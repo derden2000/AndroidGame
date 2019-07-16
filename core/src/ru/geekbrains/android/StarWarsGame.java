@@ -16,6 +16,6 @@ public class StarWarsGame extends Game {
 
     @Override
     public void create () {
-        setScreen(new MainScreen(this));
+        setScreen(new MenuScreen(this));
     }
 }

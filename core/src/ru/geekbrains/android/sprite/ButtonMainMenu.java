@@ -19,7 +19,7 @@ public class ButtonMainMenu extends ScaledTouchUpButton {
 
     @Override
     protected void action() {
-        game.setScreen(new MainScreen(this.game));
+        game.setScreen(new MenuScreen(this.game));
     }
 
     @Override

@@ -19,7 +19,7 @@ public class Explosion extends Sprite {
     }
 
     public void set(float height, Vector2 pos) {
-        sound.play();
+        sound.play(0.1f);
         setHeightProportion(height);
         this.pos.set(pos);
     }
