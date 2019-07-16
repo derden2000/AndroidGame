@@ -10,6 +10,7 @@ import ru.geekbrains.android.base.Sprite;
 import ru.geekbrains.android.math.Rect;
 import ru.geekbrains.android.math.Rnd;
 import ru.geekbrains.android.pool.BulletPool;
+import ru.geekbrains.android.pool.ExplosionPool;
 import ru.geekbrains.android.utils.Regions;
 
 public class EnemyShip extends ShipTemplate/*Sprite*/ {
@@ -19,7 +20,7 @@ public class EnemyShip extends ShipTemplate/*Sprite*/ {
 //    private Rect worldBounds;
 //    private TextureAtlas atlas;
     private float timeCount;
-    private Sound shoot, explosion, laser;
+    private Sound shoot, /*explosion,*/ laser;
     private SpaceShip hero;
 //    TextureAtlas atlas = new TextureAtlas("textures/game_btn.pack");
 //    private int bulletDamage;
@@ -65,11 +66,11 @@ public class EnemyShip extends ShipTemplate/*Sprite*/ {
         }
     }
 
-    public EnemyShip(BulletPool bulletPool, Rect worldBounds, Sound laser) {
-        super(bulletPool, worldBounds, laser);
+    public EnemyShip(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound laser) {
+        super(bulletPool, explosionPool, worldBounds, laser);
         this.bulletSpeed = new Vector2();
 //        shoot = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
-        explosion = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
+//        explosion = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
 //        laser = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
     }
 
@@ -86,16 +87,21 @@ public class EnemyShip extends ShipTemplate/*Sprite*/ {
 
     public void checkShoot(Bullet bullet) {
         if (!bullet.getOwner().getClass().equals(this.getClass())) {
-            explosion.play(0.1f);
-            destroy();
-            hero.addPoints(getHp());
+            blowSound.play(0.1f);
             bullet.destroy();
+            this.decreaseHp(bullet.getDamage());
+            if (this.getHp()<=0 ) {
+                destroy();
+                blow();
+                hero.addPoints(getHp());
+            }
+//            bullet.destroy();
         }
     }
 
     public void dispose() {
 //        shoot.dispose();
-        explosion.dispose();
+//        explosion.dispose();
 //        laser.dispose();
     }
 

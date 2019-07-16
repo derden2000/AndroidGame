@@ -10,6 +10,7 @@ import ru.geekbrains.android.base.Sprite;
 import ru.geekbrains.android.math.Rect;
 import ru.geekbrains.android.pool.BulletPool;
 import ru.geekbrains.android.pool.EnemyShipPool;
+import ru.geekbrains.android.pool.ExplosionPool;
 
 public class SpaceShip extends ShipTemplate/*Sprite*/ {
 
@@ -29,20 +30,23 @@ public class SpaceShip extends ShipTemplate/*Sprite*/ {
     private Vector2 touch;
     private Rect worldBounds;
     private TextureAtlas atlas;
-    private Sound shoot, explosion, laser;
+//    private Sound shoot, explosion, laser;
     private int points;
 
-    public SpaceShip(TextureAtlas atlas, BulletPool bulletPool, LifeLevelPic lifeLevelPic) {
+    public SpaceShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, LifeLevelPic lifeLevelPic, Sound shoot) {
         super(atlas.findRegion("ship"), 1, 2, 2);
         setHeightProportion(0.1f);
         this.atlas = atlas;
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
+        this.blowSound = explosionPool.getSound();
+        this.shootSound = shoot;
         this.lifeLevelPic = lifeLevelPic;
         speed = new Vector2();
         touch = new Vector2();
-        shoot = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
-        explosion = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
-        laser = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
+//        shoot = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+//        explosion = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
+//        laser = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
     }
 
     public CharSequence getPoints() {
@@ -161,7 +165,7 @@ public class SpaceShip extends ShipTemplate/*Sprite*/ {
     public void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, atlas.findRegion("ownBullet"), pos, new Vector2(0, 0.5f), 0.01f, worldBounds, 1);
-        laser.play();
+        shootSound.play();
     }
 
     private void moveRight() {
@@ -176,35 +180,37 @@ public class SpaceShip extends ShipTemplate/*Sprite*/ {
         speed.setZero();
     }
 
-    public void checkShoot(Bullet bullet) {
-        if (!bullet.getOwner().equals(this)) {
-            explosion.play(0.2f);
-            Gdx.input.vibrate(200);
-            bullet.destroy();
-            lifeLevelPic.strength --;
-        }
-    }
+//    public void checkShoot(Bullet bullet) {
+//        if (!bullet.getOwner().equals(this)) {
+//            explosion.play(0.2f);
+//            Gdx.input.vibrate(200);
+//            bullet.destroy();
+//            lifeLevelPic.strength --;
+//        }
+//    }
 
-    public void dispose() {
-        shoot.dispose();
-        explosion.dispose();
-        laser.dispose();
-    }
+//    public void dispose() {
+//        shoot.dispose();
+//        explosion.dispose();
+//        laser.dispose();
+//    }
 
     public void checkCross(BulletPool bulletPool, EnemyShipPool enemyShipPool) {
         for (Bullet bullet : bulletPool.getActiveObjects()) {
             if (!bullet.isOutside(this)) {
                 if (!bullet.getOwner().getClass().equals(this.getClass())) {
-                    explosion.play(0.2f);
+                    blowSound.play(0.2f);
                     Gdx.input.vibrate(200);
                     bullet.destroy();
-                    lifeLevelPic.strength--;
+                    lifeLevelPic.strength -= bullet.getDamage();
                 }
             }
         }
         for (EnemyShip enemyShip : enemyShipPool.getActiveObjects()) {
-            if (!enemyShip.isOutside(this)) {
-                explosion.play(0.2f);
+            float blowDist = this.getHalfHeight() + enemyShip.getHalfHeight();
+            if (this.pos.dst(enemyShip.pos) < blowDist/*!enemyShip.isOutside(this)*/) {
+//                blowSound.play(0.2f);
+                enemyShip.blow();
                 Gdx.input.vibrate(200);
                 enemyShip.destroy();
                 lifeLevelPic.strength -=3;

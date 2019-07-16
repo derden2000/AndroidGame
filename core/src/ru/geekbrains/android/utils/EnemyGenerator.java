@@ -25,14 +25,14 @@ public class EnemyGenerator {
     private static final float ENEMY_MIDDLE_BULLET_VY = -0.25f;
     private static final int ENEMY_MIDDLE_DAMAGE = 5;
     private static final float ENEMY_MIDDLE_RELOAD_INTERVAL = 4f;
-    private static final int ENEMY_MIDDLE_HP = 5;
+    private static final int ENEMY_MIDDLE_HP = 2;
 
     private static final float ENEMY_BIG_HEIGHT = 0.2f;
     private static final float ENEMY_BIG_BULLET_HEIGHT = 0.04f;
     private static final float ENEMY_BIG_BULLET_VY = -0.3f;
     private static final int ENEMY_BIG_DAMAGE = 10;
     private static final float ENEMY_BIG_RELOAD_INTERVAL = 1f;
-    private static final int ENEMY_BIG_HP = 10;
+    private static final int ENEMY_BIG_HP = 3;
 
     private TextureRegion[] enemySmallRegion;
     private TextureRegion[] enemyMiddleRegion;

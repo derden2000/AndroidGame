@@ -10,16 +10,18 @@ import ru.geekbrains.android.sprite.EnemyShip;
 public class EnemyShipPool extends SpritesPool<EnemyShip> {
 
     private BulletPool bulletPool;
+    private ExplosionPool explosionPool;
     private Rect worldBounds;
     private Sound shootSound;
 
     @Override
     protected EnemyShip newObject() {
-        return new EnemyShip(bulletPool, worldBounds, shootSound);
+        return new EnemyShip(bulletPool, explosionPool, worldBounds, shootSound);
     }
 
-    public EnemyShipPool(BulletPool bulletPool, Rect worldBounds, Sound shootSound) {
+    public EnemyShipPool(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound shootSound) {
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         this.worldBounds = worldBounds;
         this.shootSound = shootSound;
     }
