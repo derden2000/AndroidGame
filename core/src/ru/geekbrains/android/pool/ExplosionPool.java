@@ -13,7 +13,7 @@ public class ExplosionPool extends SpritesPool<Explosion> {
     private Sound sound;
 
     public ExplosionPool(TextureAtlas atlas, Sound sound) {
-        explosionRegion = atlas.findRegion("explosion");
+        explosionRegion = atlas.findRegion("blow");
         this.sound = sound;
     }
 
@@ -23,6 +23,6 @@ public class ExplosionPool extends SpritesPool<Explosion> {
 
     @Override
     protected Explosion newObject() {
-        return new Explosion(explosionRegion, 5, 8, 38, sound);
+        return new Explosion(explosionRegion, 9, 9, 74, sound);
     }
 }

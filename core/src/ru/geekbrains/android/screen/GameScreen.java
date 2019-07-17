@@ -5,11 +5,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Align;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import ru.geekbrains.android.base.BaseScreen;
@@ -26,6 +29,7 @@ import ru.geekbrains.android.sprite.SpaceShip;
 import ru.geekbrains.android.sprite.Star;
 import ru.geekbrains.android.utils.EnemyGenerator;
 import ru.geekbrains.android.utils.Font;
+import ru.geekbrains.android.utils.NetworkFileSaver;
 
 public class GameScreen extends BaseScreen {
 
@@ -67,6 +71,14 @@ public class GameScreen extends BaseScreen {
     @Override
     public void show() {
         super.show();
+//        try {
+//            System.out.println(NetworkFileSaver.getFTPData("fgh"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println("Local storage path: " + Gdx.files.getLocalStoragePath());
+//        File file = new File("sample.dat");
+//        System.out.println("file.getAbsolutePath() : " + file.getPath());
         bground = new Texture("space.jpg");
         background = new Background(new TextureRegion(bground));
         atlas = new TextureAtlas("textures/game_btn.pack");
@@ -81,7 +93,7 @@ public class GameScreen extends BaseScreen {
             stars.add(new Star(atlas));
         }
         font = new Font("font/sample.fnt", "font/sample.png");
-        font.setSize(0.05f);
+        font.setSize(0.025f);
         sbPoints = new StringBuilder();
         sbHp = new StringBuilder();
         sbLevel = new StringBuilder();

@@ -8,7 +8,7 @@ import ru.geekbrains.android.base.Sprite;
 
 public class Explosion extends Sprite {
 
-    private float animateInterval = 0.02f;
+    private float animateInterval = 0.01f;
     private float animateTimer = 0;
 
     private Sound sound;
