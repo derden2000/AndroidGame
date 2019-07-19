@@ -9,18 +9,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Tree;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import ru.geekbrains.android.base.BaseScreen;
 import ru.geekbrains.android.math.Rect;
@@ -29,7 +21,7 @@ import ru.geekbrains.android.sprite.Background;
 import ru.geekbrains.android.sprite.ButtonFinish;
 import ru.geekbrains.android.sprite.ButtonMainMenu;
 import ru.geekbrains.android.sprite.ButtonResults;
-import ru.geekbrains.android.utils.Font;
+import ru.geekbrains.android.sprite.ResultsWindow;
 import ru.geekbrains.android.utils.NameInputDialog;
 import ru.geekbrains.android.utils.NetworkFileSaver;
 
@@ -55,9 +47,9 @@ public class ChoiceScreen extends BaseScreen {
     private FileHandle bufFile;
     private NameInputDialog dialog;
 
-    private StringBuilder resultsString;
-    private Font font;
-    private boolean showPermited;
+    private boolean showResultsPermited;
+
+    private ResultsWindow resultsWindow;
 
     public ChoiceScreen(Game game, int points) {
         this.points = points;
@@ -78,8 +70,8 @@ public class ChoiceScreen extends BaseScreen {
         return fileOfRecords;
     }
 
-    public void setShowPermited(boolean showPermited) {
-        this.showPermited = showPermited;
+    public void setShowResultsPermited(boolean showResultsPermited) {
+        this.showResultsPermited = showResultsPermited;
     }
 
     public void syncLocalRecords() {
@@ -131,9 +123,7 @@ public class ChoiceScreen extends BaseScreen {
             dialog = new NameInputDialog(this);
             Gdx.input.getTextInput(dialog, "Вы попали в список рекордов", null, "Напишите Ваше Имя");
         }
-        font = new Font("font/1f.fnt", "font/1f.png");
-        font.setSize(0.025f);
-        resultsString = new StringBuilder();
+        resultsWindow = new ResultsWindow(atlas, records);
     }
 
     public boolean checkRecordsTable(int points) {
@@ -144,17 +134,11 @@ public class ChoiceScreen extends BaseScreen {
         }
     }
 
-    public void showRecordsTable() {
-        if (showPermited) {
-            TreeMap<Integer, String> fin = new TreeMap<Integer, String>(Collections.reverseOrder());
-            fin.putAll(records.getAllResults());
-            resultsString.setLength(0);
-            for (Map.Entry<Integer, String> entry : fin.entrySet()) {
-                resultsString.append(entry.getValue()).append(" - ").append(entry.getKey()).append("\n");
-            }
-            font.draw(batch, resultsString.toString(), -0.25f, 0);
-        }
-    }
+//    public void showRecordsTable() {
+//        if (showResultsPermited) {
+//            resultsWindow.draw(batch);
+//        }
+//    }
 
     @Override
     public void render(float delta) {
@@ -168,7 +152,9 @@ public class ChoiceScreen extends BaseScreen {
         buttonMainMenu.draw(batch);
         buttonFinish.draw(batch);
         buttonResults.draw(batch);
-        showRecordsTable();
+        if (showResultsPermited) {
+            resultsWindow.draw(batch);
+        }
         batch.end();
     }
 
@@ -179,6 +165,7 @@ public class ChoiceScreen extends BaseScreen {
         buttonMainMenu.resize(worldBounds);
         buttonFinish.resize(worldBounds);
         buttonResults.resize(worldBounds);
+        resultsWindow.resize(worldBounds);
     }
 
     @Override
@@ -193,7 +180,7 @@ public class ChoiceScreen extends BaseScreen {
         buttonMainMenu.touchDown(touch,pointer);
         buttonFinish.touchDown(touch, pointer);
         buttonResults.touchDown(touch, pointer);
-        showPermited = false;
+        showResultsPermited = false;
         return false;
     }
 
@@ -208,10 +195,10 @@ public class ChoiceScreen extends BaseScreen {
     @Override
     public boolean keyDown(int keycode) {
         if(keycode == Input.Keys.BACK) {
-            showPermited = false;
+            showResultsPermited = false;
         }
         if (keycode == Input.Keys.ESCAPE) {
-            showPermited = false;
+            showResultsPermited = false;
         }
         return false;
     }

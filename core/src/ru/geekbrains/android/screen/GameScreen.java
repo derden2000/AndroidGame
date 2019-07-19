@@ -176,7 +176,6 @@ public class GameScreen extends BaseScreen {
             game.setScreen(new ChoiceScreen(game, ship.getPoints()));
         }
         freeAllDestroyedSprites();
-//
     }
 
     public void freeAllDestroyedSprites() {

@@ -118,6 +118,13 @@ game_btn3.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+resWindow
+  rotate: false
+  xy: 1, 395
+  size: 450, 600
+  orig: 450, 600
+  offset: 0, 0
+  index: -1
 enemySmall
   rotate: false
   xy: 1, 93

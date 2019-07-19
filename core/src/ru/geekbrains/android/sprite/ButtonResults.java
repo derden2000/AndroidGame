@@ -1,7 +1,6 @@
 package ru.geekbrains.android.sprite;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import ru.geekbrains.android.base.ScaledTouchUpButton;
 import ru.geekbrains.android.math.Rect;
@@ -18,7 +17,7 @@ public class ButtonResults extends ScaledTouchUpButton {
 
     @Override
     protected void action() {
-        choiceScreen.setShowPermited(true);
+        choiceScreen.setShowResultsPermited(true);
     }
 
     @Override
